@@ -1,0 +1,41 @@
+
+- sensor:
+  - name: Bedrooms Temperature
+    unit_of_measurement: "°F"
+    unique_id: bedrooms_temperature
+    state: >
+      {{ state_attr('climate.bedroom', 'current_temperature') }}
+  - name: Living Area Temperature
+    unit_of_measurement: "°F"
+    unique_id: living_area_temperature
+    state: >
+      {{ state_attr('climate.living_area', 'current_temperature') }}
+  - name: Bedrooms Set Temperature 
+    unit_of_measurement: "°F"
+    unique_id: bedrooms_set_temperature
+    state: >
+      {{ state_attr('climate.bedroom', 'temperature') }}
+  - name: Living Area Set Temperature 
+    unit_of_measurement: "°F"
+    unique_id: living_area_set_temperature
+    state: >
+      {{ state_attr('climate.living_area', 'temperature') }}
+  - name: Travel Time – Big Bear to Garden Grove
+    icon: mdi:car
+    unique_id: travel_big_bear_to_garden_grove
+    state: >
+      {{ (state_attr('sensor.travel_time_big_bear_to_garden_grove', 'duration') | float // 60) | round(0) }} hours and {{ (state_attr('sensor.travel_time_big_bear_to_garden_grove', 'duration') | float % 60) | round(0) }} minutes
+  - name: House Secure
+    unique_id: house_secure_bro
+    icon: >
+      {% if is_state('group.house_secured', 'off') %}
+        mdi:home-lock
+      {% else %}
+        mdi:home-lock-open
+      {% endif %}
+    state: >
+      {% if is_state('group.house_secured', 'off') %}
+        Secure
+      {% else %}
+        Not Secure
+      {% endif %}

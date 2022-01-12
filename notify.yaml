@@ -1,0 +1,5 @@
+- name: all_devices
+  platform: group
+  services:
+    - service: mobile_app_itay
+    - service: mobile_app_ashleys_iphone

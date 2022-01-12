@@ -1,0 +1,14 @@
+family_location:
+  name: Family
+  entities:
+    - device_tracker.itay
+    - device_tracker.ashleys_iphone
+    
+house_secured:
+  name: House Secured
+  entities:
+    - binary_sensor.back_door
+    - binary_sensor.front_door
+    - binary_sensor.laundry_room_door_garage
+    - binary_sensor.sitting_room_door
+    - cover.garage_door

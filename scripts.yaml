@@ -1,0 +1,60 @@
+set_zoe_last_fed:
+  alias: Set Zoe Last Fed
+  sequence:
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.zoe_last_fed
+    data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+  - service: counter.increment
+    target:
+      entity_id: counter.zoe_feedings
+  mode: queued
+  icon: mdi:baby-bottle-outline
+  max: 2
+zoe_changed_solid:
+  alias: Zoe Changed – Solid
+  sequence:
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.zoe_last_changed_solid
+    data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+  - service: counter.increment
+    target:
+      entity_id: counter.solid_changes
+  mode: queued
+  icon: mdi:emoticon-poop
+  max: 2
+zoe_changed_wet:
+  alias: Zoe Changed – Wet
+  sequence:
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.zoe_last_changed_wet
+    data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+  - service: counter.increment
+    target:
+      entity_id: counter.wet_changes
+  mode: queued
+  icon: mdi:water-outline
+  max: 2
+zoe_changed_both:
+  sequence:
+  - service: input_datetime.set_datetime
+    target:
+      entity_id:
+      - input_datetime.zoe_last_changed_solid
+      - input_datetime.zoe_last_changed_wet
+    data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+  - service: counter.increment
+    target:
+      entity_id:
+      - counter.wet_changes
+      - counter.solid_changes
+  mode: queued
+  alias: Zoe Changed – Both
+  icon: mdi:water-opacity
+  max: 2

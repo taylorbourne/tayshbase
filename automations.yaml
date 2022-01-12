@@ -1,0 +1,240 @@
+- alias: Set theme at startup
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    service: frontend.set_theme
+    data:
+      name: tayshbase
+  id: ced3ec5b94164013965b0bf94ac2ae0c
+- id: '1613592954363'
+  alias: Arm Alarm – Away
+  description: Arms the alarm and locks the front door when we're both away from home
+  trigger:
+  - platform: state
+    entity_id: group.family_location
+    from: home
+    to: not_home
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Arm Alarm – Away
+  condition: []
+  action:
+  - device_id: f8f181f0e9d9272551f28fee1b7228e4
+    domain: alarm_control_panel
+    entity_id: alarm_control_panel.tayshbase_alarm
+    type: arm_away
+    code: '2431'
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  mode: queued
+  max: 10
+- id: '1613635236056'
+  alias: Arm Alarm – Home (After 11:30pm)
+  description: Arms the alarm and locks the front door when we're both home if it's
+    after 11:30
+  trigger:
+  - platform: time
+    at: '23:30:00'
+  condition:
+  - condition: state
+    entity_id: group.family_location
+    state: home
+  action:
+  - device_id: f8f181f0e9d9272551f28fee1b7228e4
+    domain: alarm_control_panel
+    entity_id: alarm_control_panel.tayshbase_alarm
+    type: arm_home
+    code: '2431'
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  mode: queued
+  max: 10
+- id: '1613800433630'
+  alias: Arm Alarm – Home
+  description: Arms the alarm in home mode and locks the front door
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Arm Alarm – Home
+  condition: []
+  action:
+  - device_id: f8f181f0e9d9272551f28fee1b7228e4
+    domain: alarm_control_panel
+    entity_id: alarm_control_panel.tayshbase_alarm
+    type: arm_home
+    code: '2431'
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  mode: single
+- id: '1613800586119'
+  alias: Disarm Alarm
+  description: Disarms the alarm and unlocks the front door
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Disarm Alarm
+  condition: []
+  action:
+  - device_id: f8f181f0e9d9272551f28fee1b7228e4
+    domain: alarm_control_panel
+    entity_id: alarm_control_panel.tayshbase_alarm
+    type: disarm
+    code: '2431'
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: unlock
+  mode: single
+- id: '1613895191503'
+  alias: Lock Front Door
+  description: Locks the front door
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Lock Front Door
+  condition:
+  - condition: device
+    device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: is_unlocked
+  action:
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  mode: queued
+  max: 10
+- id: '1613895596848'
+  alias: Unlock Front Door
+  description: Unlocks the front door
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Unlock Front Door
+  condition:
+  - condition: device
+    device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: is_locked
+  action:
+  - device_id: 8723bf8ef154702a6926964b551061e7
+    domain: lock
+    entity_id: lock.front_door
+    type: unlock
+  mode: queued
+  max: 10
+- id: '1620802093411'
+  alias: Door Ajar
+  description: Sends a notification when a door is left open for more than 5 minutes
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 8496483abf528f06ac90a816761deb88
+    entity_id: binary_sensor.front_door
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - type: opened
+    platform: device
+    device_id: 8102fb52a21d700d14748159fe3e6268
+    entity_id: binary_sensor.sitting_room_door
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - type: opened
+    platform: device
+    device_id: 94ac9d8a8fd4d99ea7251acd2aa993d3
+    entity_id: binary_sensor.laundry_room_door_garage
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - type: opened
+    platform: device
+    device_id: 82ce87c45174427c5aa59d859ff4eac6
+    entity_id: binary_sensor.back_door
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: notify.all_devices
+    data:
+      message: '{{ trigger.to_state.name }} has been open for 5+ minutes.'
+  mode: single
+- id: '1641455445098'
+  alias: Fed Zoe
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: Zoe Fed
+  condition: []
+  action:
+  - service: script.set_zoe_last_fed
+  mode: single
+  max: 2
+- id: '1641516011555'
+  alias: Reset Zoe Counters
+  description: Resets the counters that keeps track of when Zoe was fed and changed
+    to 0 at the end of each day
+  trigger:
+  - platform: time
+    at: 00:00:00
+  condition: []
+  action:
+  - service: counter.reset
+    target:
+      entity_id:
+      - counter.zoe_feedings
+      - counter.wet_changes
+      - counter.solid_changes
+  mode: single
+- id: '1641518303936'
+  alias: Notify Zoe Feeding time
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == ( states.input_datetime.zoe_last_fed.attributes.timestamp
+      | int + 10800 ) | timestamp_custom(''%H:%M'') }}'
+  condition: []
+  action:
+  - service: notify.all_devices
+    data:
+      message: It's been 3 hours since Zoe was last fed.. that girls hungry, bitch!
+  mode: single
+- id: '1641972648634'
+  alias: TESTING
+  description: ''
+  use_blueprint:
+    path: nevesenin/target_temperature_adjustment_fahrenheit.yaml
+    input:
+      temperature_sensor: sensor.nursery_temperature
+      thermostat: climate.bedroom
+      target_temperature: 69

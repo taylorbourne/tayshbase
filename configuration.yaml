@@ -1,0 +1,131 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+#logger:
+#  default: debug
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.17.0.0/24
+
+group: !include groups.yaml
+automation: !include automations.yaml
+notify: !include notify.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+template: !include templates.yaml
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'date_time_utc'
+      - 'date_time_iso'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+
+alexa:
+  smart_home:
+
+ios:
+  actions:
+    - name: Arm Alarm – Away
+      background_color: "#ff453a"
+      label:
+        text: "Arm Alarm – Away"
+        color: "#ffffff"
+      icon:
+        icon: shield_lock
+        color: "#ffffff"
+    - name: Arm Alarm – Home
+      background_color: "#ff5d54"
+      label:
+        text: "Arm Alarm – Home"
+        color: "#ffffff"
+      icon:
+        icon: shield_lock
+        color: "#ffffff"
+    - name: Disarm Alarm
+      background_color: "#30d158"
+      label:
+        text: "Disarm Alarm"
+        color: "#ffffff"
+      icon:
+        icon: shield_remove
+        color: "#ffffff"
+    - name: Lock Front Door
+      background_color: "#ff453a"
+      label:
+        text: "Lock Front Door"
+        color: "#ffffff"
+      icon:
+        icon: lock
+        color: "#ffffff"
+    - name: Unlock Front Door
+      background_color: "#30d158"
+      label:
+        text: "Unlock Front Door"
+        color: "#ffffff"
+      icon:
+        icon: lock_open
+        color: "#ffffff"
+    - name: Zoe Fed
+      background_color: "#ffd1dc"
+      label:
+        text: "Zoe Fed!"
+        color: "#744752"
+      icon:
+        icon: baby-bottle
+        color: "#744752"
+      
+
+zone:
+  # This will override the default home zone
+  - name: Home
+    latitude: 34.24000883967795
+    longitude: -116.8845736678887
+    radius: 50
+    icon: mdi:home
+
+mqtt:
+  broker: 192.168.1.105:1883
+  username: tayshserve
+  password: Giraffe12
+
+frontend:
+  themes: !include_dir_merge_named themes
+        
+#
+# Enable lovelace User Interface
+#
+lovelace:
+  mode: yaml
+  resources:
+    - url: /hacsfiles/upcoming-media-card/upcoming-media-card.js 
+      type: module
+    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+      type: module
+    - url: /hacsfiles/circle-sensor-card/circle-sensor-card.js
+      type: module
+    - url: /hacsfiles/ha-card-waze-travel-time/ha-card-waze-travel-time.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/weather-card/weather-card.js
+      type: module
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+      type: module
+    - url: /hacsfiles/apexcharts-card/apexcharts-card.js?v=1.10.0
+      type: module
+    - url: /local/font.css                                                       
+      type: css
